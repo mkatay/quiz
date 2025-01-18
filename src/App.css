@@ -1,0 +1,23 @@
+:root{
+--primaryBg:#2f3041;
+--primaryColor:#e9ebee;
+--secondaryBg:#dedede;
+}
+*{
+  margin: 0;
+  box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
+}
+.app{
+  min-height: 100vh;
+  background-color: rgba(63, 80, 181,0.1);;
+ 
+}
+.app h3{
+text-align: center;
+padding: 10px;
+}
+
+h6{
+  font-size: 1rem!important;
+}
