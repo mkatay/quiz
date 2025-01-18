@@ -7,6 +7,7 @@ import Select from '@mui/material/Select';
 import { useContext } from 'react';
 import { QuizListContext } from '../context/QuizList';
 import { QuizContainer } from './QuizContainer';
+import { imageListClasses } from '@mui/material';
 
 
 
@@ -34,8 +35,15 @@ export const SelectQuiz=()=> {
         )}
         </Select>
       </FormControl>
+    
     </Box>  
-    {selectedQuiz && <QuizContainer selectedQuiz={selectedQuiz}/>}
+    {selectedQuiz ? 
+      <QuizContainer selectedQuiz={selectedQuiz}/>
+      :  
+      <div style={{display:"flex",justifyContent:'center',maxWidth:'600px',margin:'auto'}}>
+          <img style={{width:'100%'}} src="quizLetters.png" alt="quiz" />      
+      </div>
+     }
     </>
   );
 }
