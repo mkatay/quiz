@@ -7,6 +7,7 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
+  TouchSensor,
 } from '@dnd-kit/core';
 import {
   SortableContext,
@@ -50,6 +51,7 @@ console.log(options,questionData.answer);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
+    useSensor(TouchSensor), // Hozzáadva a TouchSensor
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
