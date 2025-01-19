@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import {  Container,  Typography,  Paper,  Select,  MenuItem,  Button,  Grid2,} from "@mui/material";
 import { matching } from "../utils";
+import CheckIcon from '@mui/icons-material/Check';
 
 export const MatchingQuestion = ({ questionData ,questionIndex,setHit}) => {
   const [answers, setAnswers] = useState(
     Array(questionData.options.length).fill("") // Kezdetben üres válaszok
   );
+  const [correct,setCorrect]=useState(false)
  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleSelectChange = (index, value) => {
@@ -17,12 +19,11 @@ console.log(answers);
 
   const handleSubmit = () => {
     if (isSubmitted) return; 
-      matching(questionData,answers) && setHit((prev) => ++prev);
+    if(matching(questionData,answers)){
+      setHit((prev) => ++prev);
+      setCorrect(true)
+    }
       setIsSubmitted(true);
-
-        /* const updateAnswer=answers.find(obj=>obj.o==index)
-    if(updateAnswer) setAnswers(prev=>prev.forEach(obj=>{if(obj.o==index) obj.q=value}))
-    else setAnswers(prev=>[...prev,{o:index,q:value}]);*/
   };
 
   return (
@@ -68,15 +69,15 @@ console.log(answers);
       </Grid2>
     ))}
   </Grid2>
-  <Button
-    variant="contained"
-    color="primary"
-    onClick={handleSubmit}
-    sx={{ marginTop: "20px" }}
-    disabled={isSubmitted}
-  >
+  <div style={{display:'flex',justifyContent:'center',gap:'5px'}}>
+    <Button variant="contained" color="primary"  sx={{ marginTop: "20px" }}
+      onClick={handleSubmit}
+      disabled={isSubmitted}>
     Save
-  </Button>
+    </Button>
+    {correct && <CheckIcon sx={{color:'green',marginTop: "20px"}}/>}
+  </div>
+  
 </Container>
 </>
   );

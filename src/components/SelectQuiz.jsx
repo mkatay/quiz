@@ -19,7 +19,7 @@ export const SelectQuiz=()=> {
  
   return (
     <>
-    <Box sx={{ minWidth: 120,maxWidth:200,margin:'auto' }}>
+    <Box sx={{ minWidth: 120,maxWidth:200,margin:'10px auto' }}>
       <FormControl fullWidth >
         <InputLabel id="demo-simple-select-label">Interaktiv tesztek</InputLabel>
         <Select

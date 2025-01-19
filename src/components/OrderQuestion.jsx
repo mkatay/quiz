@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Typography, List, ListItem, ListItemText, Paper } from '@mui/material';
+import { Box, Typography, List, ListItem, ListItemText, Paper, Button } from '@mui/material';
 import {
   DndContext,
   closestCenter,
@@ -16,6 +16,7 @@ import {
   useSortable,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import CheckIcon from '@mui/icons-material/Check';
 
 
 const SortableItem = ({ id, children }) => {
@@ -40,8 +41,12 @@ const SortableItem = ({ id, children }) => {
   );
 };
 
-export const OrderQuestion = ({questionData,questionIndex}) => {
+export const OrderQuestion = ({questionData,questionIndex,setHit}) => {
   const [options, setOptions] = useState(questionData.options);
+  const [isSubmitted, setIsSubmitted] = useState(false); // Új állapot a gomb letiltásához
+  const [correct,setCorrect]=useState(false)
+
+console.log(options,questionData.answer);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -59,9 +64,19 @@ export const OrderQuestion = ({questionData,questionIndex}) => {
       setOptions(arrayMove(options, oldIndex, newIndex));
     }
   };
-
+ const handleSubmit = () => {
+  if (isSubmitted) return;
+  // Ellenőrzés, hogy az options állapot helyes sorrendben van-e
+  const isCorrectOrder = options.every((option, index) => option === questionData.options[questionData.answer[index]]);
+  if (isCorrectOrder) {
+    setHit((prev) => prev + 1); // A hit számláló növelése
+    setCorrect(true); // A helyes válasz kijelzése
+  }
+  setIsSubmitted(true);
+};
   return (
-    <Box sx={{ maxWidth: 400, margin: 'auto' }}>
+    <>
+    <Box sx={{ width:'100%', margin: 'auto',padding:'10px' }}>
       <Typography variant="h6" gutterBottom>
       {questionIndex}.{questionData.question}
       </Typography>
@@ -81,5 +96,17 @@ export const OrderQuestion = ({questionData,questionIndex}) => {
         </SortableContext>
       </DndContext>
     </Box>
+    <div style={{display:'flex',gap:'5px',justifyContent:'center'}}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleSubmit}
+          sx={{ marginTop: "20px",display:'block' }}
+          disabled={isSubmitted } >
+        Save
+        </Button>
+        {correct && <CheckIcon sx={{color:'green',marginTop: "20px"}}/>}
+      </div>
+    </>
   );
 };

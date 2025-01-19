@@ -21,3 +21,37 @@ padding: 10px;
 h6{
   font-size: 1rem!important;
 }
+@keyframes blink {
+  0% {
+      opacity: 1;
+  }
+
+  50% {
+      opacity: 0;
+  }
+
+  100% {
+      opacity: 1;
+  }
+}
+
+.blinking-text {
+  text-align: center;
+  margin-top: 20%;
+  font-size: 24px;
+  color: #3f50b5;
+  animation: blink 1s infinite;
+}
+@media (max-width: 400px) {
+  h6 ,legend, p{
+    font-size: 0.7rem!important;
+  }
+  label span span, input, li, label span,div span{
+    font-size: 0.8rem!important;
+  }
+}
+
+
+.MuiBox-root{
+  background-color: white;
+}

@@ -52,9 +52,11 @@ console.log('jó válaszok száma:',hit);
         </Button>
       </Box>  
     </Box>
-    {questionIndex==19 && <Box>
+    {questionIndex==19 && 
+    <Box sx={{width:'80%',boxShadow:'0 0 5px #3f50b5',backgroundColor:'inherit',margin:'auto',borderRadius:'10px'}}>
       <Typography variant="h6" gutterBottom sx={{textAlign:'center'}}>
-       Az eredmény: <span style={{color:"green",fontSize:'2rem'}}>{hit}</span><span>/20</span><span> Százalékos teljesítés:{(hit*20/100).toFixed(1)}%</span>
+       Végeredmény: <span style={{color:"green",fontSize:'2rem'}}>{hit}</span><span>/20 pont.</span>
+       <span> &nbsp; Százalékos teljesítés: <b className="blinking-text" >{(hit*100/20).toFixed(1)}%</b></span>
       </Typography>
     </Box>}
     </>
