@@ -51,7 +51,7 @@ console.log(options,questionData.answer);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
-    useSensor(TouchSensor), // Hozzáadva a TouchSensor
+    useSensor(TouchSensor , { pressDelay: 200, activationConstraint: { distance: 10 } }), // Hozzáadva a TouchSensor
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })

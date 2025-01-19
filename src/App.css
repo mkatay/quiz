@@ -8,6 +8,10 @@
   box-sizing: border-box;
   font-family: 'Roboto', sans-serif;
 }
+body {
+  touch-action: manipulation;/*érintőképernyőn a drag and drop miatt h működjön*/
+}
+
 .app{
   min-height: 100vh;
   background-color: rgba(63, 80, 181,0.1);;
