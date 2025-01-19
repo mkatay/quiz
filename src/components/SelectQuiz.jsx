@@ -40,7 +40,7 @@ export const SelectQuiz=()=> {
     {selectedQuiz ? 
       <QuizContainer selectedQuiz={selectedQuiz}/>
       :  
-      <div style={{display:"flex",justifyContent:'center',maxWidth:'600px',margin:'auto'}}>
+      <div style={{display:"flex",justifyContent:'center',maxWidth:'600px',margin:'auto',padding:'1rem'}}>
           <img style={{width:'100%'}} src="quizLetters.png" alt="quiz" />      
       </div>
      }

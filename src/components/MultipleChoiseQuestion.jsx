@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { Box, Typography, FormGroup, FormControlLabel, Checkbox, Button } from "@mui/material";
+import { multiple_choice } from "../utils";
 
-export const MultipleChoiceQuestion = ({ questionData,questionIndex }) => {
+export const MultipleChoiceQuestion = ({ questionData,questionIndex,setHit }) => {
   const [selectedAnswers, setSelectedAnswers] = useState([]);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleCheckboxChange = (optionIndex) => {
     setSelectedAnswers((prevSelected) =>
@@ -13,7 +15,9 @@ export const MultipleChoiceQuestion = ({ questionData,questionIndex }) => {
   };
 
   const handleSubmit = () => {
-    alert(`Selected answers: ${JSON.stringify(selectedAnswers)}`);
+    if (isSubmitted) return; 
+        multiple_choice(questionData,selectedAnswers) && setHit((prev) => ++prev);
+        setIsSubmitted(true);
   };
 
   return (
@@ -35,8 +39,10 @@ export const MultipleChoiceQuestion = ({ questionData,questionIndex }) => {
           />
         ))}
       </FormGroup>
-      <Button variant="contained" color="primary" onClick={handleSubmit} style={{ marginTop: "20px" }}>
-        Submit
+      <Button variant="contained" color="primary" onClick={handleSubmit} 
+          disabled={isSubmitted}
+          style={{ marginTop: "20px" }}>
+        Save
       </Button>
     </Box>
   );

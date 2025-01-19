@@ -10,10 +10,13 @@ import {
   Button,
 } from "@mui/material";
 import { useEffect } from "react";
+import { single_choice } from "../utils";
+import CheckIcon from '@mui/icons-material/Check';
 
 export const SingleChoiceQuestion = ({ questionData,questionIndex,setHit}) => {
   const [selectedAnswer, setSelectedAnswer] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false); // Új állapot a gomb letiltásához
+  const [correct,setCorrect]=useState(false)
 
   useEffect(() => {
     // Kérdés váltásakor alaphelyzetbe állítjuk az állapotot
@@ -23,12 +26,16 @@ export const SingleChoiceQuestion = ({ questionData,questionIndex,setHit}) => {
 
   console.log('single_choice komponensben');
   const handleRadioChange = (event) => {
+    if(isSubmitted) return
     setSelectedAnswer(event.target.value);
   };
 
   const handleSubmit = () => {
     if (isSubmitted) return; 
-    selectedAnswer == questionData.answer && setHit((prev) => ++prev);
+    if(single_choice(questionData,selectedAnswer)){
+      setHit((prev) => ++prev);
+      setCorrect(true)
+    } 
     setIsSubmitted(true);
   };
 
@@ -39,7 +46,7 @@ export const SingleChoiceQuestion = ({ questionData,questionIndex,setHit}) => {
       </Typography>
       <FormControl component="fieldset">
         <FormLabel component="legend">Válaszlehetőségek</FormLabel>
-        <RadioGroup value={selectedAnswer} onChange={handleRadioChange}>
+        <RadioGroup value={selectedAnswer} onChange={handleRadioChange}  >
           {questionData.options.map((option, index) => (
             <FormControlLabel
               key={index}
@@ -50,6 +57,7 @@ export const SingleChoiceQuestion = ({ questionData,questionIndex,setHit}) => {
           ))}
         </RadioGroup>
       </FormControl>
+      <div style={{display:'flex',gap:'5px',alignItems:'center'}}>
       <Button
         variant="contained"
         color="primary"
@@ -59,6 +67,8 @@ export const SingleChoiceQuestion = ({ questionData,questionIndex,setHit}) => {
       >
         save
       </Button>
+      {correct && <CheckIcon sx={{color:'green',marginTop: "20px"}}/>}
+      </div>
     </Container>
   );
 };
