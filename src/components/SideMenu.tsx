@@ -4,6 +4,7 @@ import { ChevronRight, Loop, Search } from "@mui/icons-material";
 import { useQueryParams } from "../hooks/QueryParamsContext";
 import { databases, DB, DBTest } from "../lib/appwrite";
 import { Query } from "appwrite";
+import { pad } from "../lib/utils";
 
 export default function SideMenu() {
   const {queryParams, updateQueryParams} = useQueryParams();
@@ -62,7 +63,7 @@ export default function SideMenu() {
                   <ListItemIcon>
                     <ChevronRight />
                   </ListItemIcon>
-                  <ListItemText primary={`${test.year}. ${test.month}.`} />
+                  <ListItemText primary={`${test.year}/${pad(test.month, 2)}`} />
                 </ListItemButton>
               ))}
             </div>

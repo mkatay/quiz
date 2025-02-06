@@ -1,10 +1,12 @@
 import React from 'react';
-import { Box, Container, Pagination } from '@mui/material';
+import { Box, Container, Pagination, Typography } from '@mui/material';
 import SideMenu from './components/SideMenu';
 import { useQueryParams } from './hooks/QueryParamsContext';
-import { databases, DB, DBQuestion } from './lib/appwrite';
+import { databases, DB, DBQuestion, QuestionType } from './lib/appwrite';
 import { Query } from 'appwrite';
 import { Loop } from '@mui/icons-material';
+import OrderQuestion from './components/questions/OrderQuestion';
+import { pad } from './lib/utils';
 
 export default function App() {
   const {queryParams, updateQueryParams} = useQueryParams();
@@ -41,13 +43,21 @@ export default function App() {
     }}>
       <SideMenu />
       {queryParams.t ? questions ? (
-        <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, gap: 2}}>
-          <span style={{color: 'gray', fontWeight: 'bold', fontSize: '1.5rem', width: '100%'}}>
-            {currentQuestion+1} / {questions.length}
-          </span>
-          <h3>
+        <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, gap: 2, padding: 2}}>
+          <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 2, width: '100%'}}>
+            <Typography variant='h6' sx={{color: 'gray', fontWeight: 900}}>
+              {questions[currentQuestion].test.profession} - {questions[currentQuestion].test.year}/{pad(questions[currentQuestion].test.month, 2)}
+            </Typography>
+            <Typography variant='h6' sx={{color: 'gray', fontWeight: 900}}>
+              {currentQuestion+1} / {questions.length}
+            </Typography>
+          </Box>
+          <Typography variant='h5'>
             {questions[currentQuestion].question}
-          </h3>
+          </Typography>
+          {questions[currentQuestion].type === QuestionType.ORDER ? (
+            <OrderQuestion question={questions[currentQuestion]} />
+          ) : ('nope')}
           <Pagination sx={{marginTop: 'auto'}}
           count={questions.length} page={currentQuestion+1} onChange={(_,v) => setCurrentQuestion(v-1)} />
         </Box>

@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { Box, Typography, List, ListItem, ListItemText, Paper, Button } from '@mui/material';
+import { Box, Button, List, ListItem, ListItemText, Paper } from '@mui/material';
 import {
   DndContext,
   closestCenter,
-  KeyboardSensor,
   PointerSensor,
   useSensor,
   useSensors,
@@ -11,13 +10,14 @@ import {
 } from '@dnd-kit/core';
 import {
   SortableContext,
-  sortableKeyboardCoordinates,
   verticalListSortingStrategy,
   arrayMove,
   useSortable,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import CheckIcon from '@mui/icons-material/Check';
+import { DBQuestion } from '../../lib/appwrite';
+import { DragIndicator, ExpandLess, ExpandMore } from '@mui/icons-material';
 
 
 const SortableItem = ({ id, children }) => {
@@ -42,73 +42,48 @@ const SortableItem = ({ id, children }) => {
   );
 };
 
-export const OrderQuestion = ({questionData,questionIndex,setHit}) => {
-  const [options, setOptions] = useState(questionData.options);
-  const [isSubmitted, setIsSubmitted] = useState(false); // Új állapot a gomb letiltásához
-  const [correct,setCorrect]=useState(false)
+export default function OrderQuestion({question}: {question: DBQuestion}) {
+  const [options, setOptions] = useState(question.options.sort(() => Math.random() - 0.5));
 
-console.log(options,questionData.answer);
-
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(TouchSensor , { pressDelay: 200, activationConstraint: { distance: 10 } }), // Hozzáadva a TouchSensor
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
-
-  const handleDragEnd = (event) => {
+  const handleDragEnd = (event: any) => {
     const { active, over } = event;
-
+    if (!active.id || !over.id) return;
     if (active.id !== over.id) {
       const oldIndex = options.indexOf(active.id);
       const newIndex = options.indexOf(over.id);
       setOptions(arrayMove(options, oldIndex, newIndex));
     }
   };
- const handleSubmit = () => {
-  if (isSubmitted) return;
-  // Ellenőrzés, hogy az options állapot helyes sorrendben van-e
-  const isCorrectOrder = options.every((option, index) => option === questionData.options[questionData.answer[index]]);
-  if (isCorrectOrder) {
-    setHit((prev) => prev + 1); // A hit számláló növelése
-    setCorrect(true); // A helyes válasz kijelzése
-  }
-  setIsSubmitted(true);
-};
+  
+  const sensors = useSensors(useSensor(PointerSensor, {activationConstraint: {distance: 10}}));
+
   return (
-    <>
-    <Box sx={{ width:'100%', margin: 'auto',padding:'10px' }}>
-      <Typography variant="h6" gutterBottom>
-      {questionIndex}.{questionData.question}
-      </Typography>
+    <Box sx={{ width:'100%' }}>
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
         onDragEnd={handleDragEnd}
       >
-        <SortableContext items={options} strategy={verticalListSortingStrategy}>
+        <SortableContext
+          items={options}
+          strategy={verticalListSortingStrategy}
+        >
           <List>
-            {options.map((option) => (
+            {options.map((option, index, array) => (
               <SortableItem key={option} id={option}>
-                {option}
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <DragIndicator />
+                  {option}
+                  <Box sx={{ display: 'flex', flexDirection: 'row', marginLeft: 'auto', gap: 1 }}>
+                    <Button type='button' onClick={()=>handleDragEnd({active:{id:option},over:{id:array[index-1]}})}><ExpandLess /></Button>
+                    <Button type='button' onClick={()=>handleDragEnd({active:{id:option},over:{id:array[index+1]}})}><ExpandMore /></Button>
+                  </Box>
+                </Box>
               </SortableItem>
             ))}
           </List>
         </SortableContext>
       </DndContext>
     </Box>
-    <div style={{display:'flex',gap:'5px',justifyContent:'center'}}>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleSubmit}
-          sx={{ marginTop: "20px",display:'block' }}
-          disabled={isSubmitted } >
-        Save
-        </Button>
-        {correct && <CheckIcon sx={{color:'green',marginTop: "20px"}}/>}
-      </div>
-    </>
   );
 };
