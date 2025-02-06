@@ -70,9 +70,9 @@ export default function OrderQuestion({question}: {question: DBQuestion}) {
         >
           <List>
             {options.map((option, index, array) => (
-              <SortableItem key={option} id={option}>
+              <SortableItem key={option} id={option} >
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <DragIndicator />
+                  <DragIndicator sx={{':hover': {cursor: 'grab'}, ':active': {cursor:'grabbing'}}} />
                   {option}
                   <Box sx={{ display: 'flex', flexDirection: 'row', marginLeft: 'auto', gap: 1 }}>
                     <Button type='button' onClick={()=>handleDragEnd({active:{id:option},over:{id:array[index-1]}})}><ExpandLess /></Button>

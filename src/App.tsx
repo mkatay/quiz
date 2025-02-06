@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Container, Pagination, Typography } from '@mui/material';
+import { Box, Button, Container, Pagination, Typography } from '@mui/material';
 import SideMenu from './components/SideMenu';
 import { useQueryParams } from './hooks/QueryParamsContext';
 import { databases, DB, DBQuestion, QuestionType } from './lib/appwrite';
@@ -7,12 +7,20 @@ import { Query } from 'appwrite';
 import { Loop } from '@mui/icons-material';
 import OrderQuestion from './components/questions/OrderQuestion';
 import { pad } from './lib/utils';
+import { MultipleChoiceQuestion } from './components/questions/MultipleChoiseQuestion';
 
 export default function App() {
   const {queryParams, updateQueryParams} = useQueryParams();
 
   const [questions, setQuestions] = React.useState<DBQuestion[]>();
   const [currentQuestion, setCurrentQuestion] = React.useState<number>(0);
+
+  React.useEffect(() => {
+    if (!questions) return;
+    const newId = questions[currentQuestion].$id;
+    if (queryParams.q === newId) return;
+    updateQueryParams({q: newId});
+  }, [currentQuestion, queryParams, questions]);
 
   React.useEffect(() => {
     if (!queryParams.t) return;
@@ -29,6 +37,7 @@ export default function App() {
         documents = documents.sort(() => Math.random() - 0.5);
       }
       setQuestions(documents);
+      setCurrentQuestion(0);
     })
     .catch((e) => console.error(e));
   }, [queryParams.t]);
@@ -42,7 +51,7 @@ export default function App() {
       gap: 2
     }}>
       <SideMenu />
-      {queryParams.t ? questions ? (
+      {queryParams.t ? queryParams.q && questions ? (
         <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, gap: 2, padding: 2}}>
           <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 2, width: '100%'}}>
             <Typography variant='h6' sx={{color: 'gray', fontWeight: 900}}>
@@ -55,9 +64,14 @@ export default function App() {
           <Typography variant='h5'>
             {questions[currentQuestion].question}
           </Typography>
-          {questions[currentQuestion].type === QuestionType.ORDER ? (
-            <OrderQuestion question={questions[currentQuestion]} />
-          ) : ('nope')}
+          <Box sx={{userSelect: 'none', width: '100%'}}>
+            {questions[currentQuestion].type === QuestionType.ORDER && (<OrderQuestion question={questions[currentQuestion]} />)}
+            {questions[currentQuestion].type === QuestionType.MULTIPLE_CHOICE && (<MultipleChoiceQuestion question={questions[currentQuestion]} />)}
+          </Box>
+          <Button sx={{alignSelf: 'flex-end'}} variant='contained'
+          onClick={() => setCurrentQuestion((prev) => prev+1)}>
+            {currentQuestion === questions.length-1 ? "Befejezés" : "Következő"}
+          </Button>
           <Pagination sx={{marginTop: 'auto'}}
           count={questions.length} page={currentQuestion+1} onChange={(_,v) => setCurrentQuestion(v-1)} />
         </Box>
