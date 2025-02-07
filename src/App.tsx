@@ -18,9 +18,14 @@ export default function App() {
   React.useEffect(() => {
     if (!questions) return;
     const newId = questions[currentQuestion].$id;
-    if (queryParams.q === newId) return;
-    updateQueryParams({q: newId});
-  }, [currentQuestion, queryParams, questions]);
+    if (newId !== queryParams.q) updateQueryParams({q: newId});
+  }, [currentQuestion, questions]);
+
+  React.useEffect(() => {
+    if (!queryParams.q || !questions) return;
+    const index = questions?.findIndex((doc) => doc.$id === queryParams.q);
+    if (index !== currentQuestion) setCurrentQuestion(index);
+  }, [queryParams.q, questions]);
 
   React.useEffect(() => {
     if (!queryParams.t) return;
@@ -51,7 +56,7 @@ export default function App() {
       gap: 2
     }}>
       <SideMenu />
-      {queryParams.t ? queryParams.q && questions ? (
+      {queryParams.t ? questions ? (
         <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, gap: 2, padding: 2}}>
           <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 2, width: '100%'}}>
             <Typography variant='h6' sx={{color: 'gray', fontWeight: 900}}>
