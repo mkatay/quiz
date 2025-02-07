@@ -3,7 +3,7 @@ import { FormGroup, FormControlLabel, Checkbox, Paper } from "@mui/material";
 import { DBQuestion } from "../../lib/appwrite";
 
 export default function MultipleChoiceQuestion(
-  {question, state, setState}: {question: DBQuestion, state: string[], setState: React.Dispatch<React.SetStateAction<string[]>>}
+  {question, state, setState, reveal}: {question: DBQuestion, state: string[], setState: React.Dispatch<React.SetStateAction<string[]>>, reveal?: boolean}
 ) {
 
   React.useEffect(() => {
@@ -13,7 +13,10 @@ export default function MultipleChoiceQuestion(
   return (
     <FormGroup sx={{ gap: 1, flexDirection: 'row' }}>
       {question.options.map((option, index) => (
-        <Paper key={index} sx={{ display: 'flex', minWidth: '49%', flexGrow: 1 }}>
+        <Paper key={index} sx={{ display: 'flex', minWidth: '49%', flexGrow: 1,
+          border: reveal ? 2 : 'none',
+          borderColor: (t) => state[index] === question.matches[index] ? t.palette.success.dark : t.palette.error.dark
+        }}>
           <FormControlLabel
             sx={{ flex: 1, margin: 0, padding: 1, paddingRight: 2 }}
             control={<Checkbox />}

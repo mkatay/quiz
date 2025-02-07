@@ -8,11 +8,11 @@ import SortableItem from '../SortableItem';
 
 
 export default function OrderQuestion(
-  {question, state, setState}: {question: DBQuestion, state: string[], setState: React.Dispatch<React.SetStateAction<string[]>>}
+  {question, state, setState, reveal}: {question: DBQuestion, state: string[], setState: React.Dispatch<React.SetStateAction<string[]>>, reveal?: boolean}
 ) {
 
   React.useEffect(() => {
-    if (!state?.length) setState(question.options.sort(() => Math.random() - 0.5));
+    if (!state?.length) setState([...question.options].sort(() => Math.random() - 0.5));
   }, []);
 
   const handleDragEnd = (event: any) => {
@@ -40,7 +40,10 @@ export default function OrderQuestion(
         >
           <List>
             {state?.map((option, index, array) => (
-              <SortableItem key={option} id={option} >
+              <SortableItem key={option} id={option} sx={{
+                border: reveal ? 2 : 'none',
+                borderColor: (t) => option === question.options[index] ? t.palette.success.dark : t.palette.error.dark
+              }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <DragIndicator sx={{':hover': {cursor: 'grab'}, ':active': {cursor:'grabbing'}}} />
                   {option}

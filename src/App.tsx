@@ -89,19 +89,19 @@ export default function App() {
           </Typography>
           <Box sx={{userSelect: 'none', width: '100%'}}>
             {questions[currentQuestion].type === QuestionType.ORDER && (
-              <OrderQuestion question={questions[currentQuestion]} state={answers[currentQuestion]} setState={handleQuestionChange} />
+              <OrderQuestion question={questions[currentQuestion]} state={answers[currentQuestion]} setState={handleQuestionChange} reveal={score !== undefined} />
             )}
             {questions[currentQuestion].type === QuestionType.MULTIPLE_CHOICE && (
-              <MultipleChoiceQuestion question={questions[currentQuestion]} state={answers[currentQuestion]} setState={handleQuestionChange} />
+              <MultipleChoiceQuestion question={questions[currentQuestion]} state={answers[currentQuestion]} setState={handleQuestionChange} reveal={score !== undefined} />
             )}
             {questions[currentQuestion].type === QuestionType.MATCH && (
-              <MatchingQuestion question={questions[currentQuestion]} state={answers[currentQuestion]} setState={handleQuestionChange} />
+              <MatchingQuestion question={questions[currentQuestion]} state={answers[currentQuestion]} setState={handleQuestionChange} reveal={score !== undefined} />
             )}
             {questions[currentQuestion].type === QuestionType.SINGLE_CHOICE && (
-              <SingleChoiceQuestion question={questions[currentQuestion]} state={answers[currentQuestion]} setState={handleQuestionChange} />
+              <SingleChoiceQuestion question={questions[currentQuestion]} state={answers[currentQuestion]} setState={handleQuestionChange} reveal={score !== undefined} />
             )}
           </Box>
-          {score ? (
+          {score !== undefined ? (
             <Paper sx={{padding: 2, backgroundColor: (t) => t.palette.info.dark}}>
               <Typography variant='h6'>
                 Eredmény: {score} / {questions.length} ({Math.round(score/questions.length*100)}%)

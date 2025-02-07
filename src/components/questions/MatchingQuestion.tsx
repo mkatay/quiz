@@ -7,11 +7,11 @@ import { DragIndicator, ExpandLess, ExpandMore } from '@mui/icons-material';
 import SortableItem from '../SortableItem';
 
 export default function MatchingQuestion(
-  {question, state, setState}: {question: DBQuestion, state: string[], setState: React.Dispatch<React.SetStateAction<string[]>>}
+  {question, state, setState, reveal}: {question: DBQuestion, state: string[], setState: React.Dispatch<React.SetStateAction<string[]>>, reveal?: boolean}
 ) {
   
   React.useEffect(() => {
-    if (!state?.length) setState(question.matches.sort(() => Math.random() - 0.5));
+    if (!state?.length) setState([...question.matches].sort(() => Math.random() - 0.5));
   }, []);
 
   const handleDragEnd = (event: any) => {
@@ -43,7 +43,10 @@ export default function MatchingQuestion(
                 <Typography variant='h6' sx={{ padding: 1 }}>
                   {question.options[index]}
                 </Typography>
-                <SortableItem id={option} >
+                <SortableItem id={option} sx={{
+                  border: reveal ? 2 : 'none',
+                  borderColor: (t) => option === question.matches[index] ? t.palette.success.dark : t.palette.error.dark
+                }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <DragIndicator sx={{':hover': {cursor: 'grab'}, ':active': {cursor:'grabbing'}}} />
                     {option}
