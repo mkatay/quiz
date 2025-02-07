@@ -58,7 +58,7 @@ export default function App() {
   const [score, setScore] = React.useState<number>();
   function handleNext() {
     if (questions && currentQuestion === questions.length - 1) {
-      setScore(answers.reduce((acc, val, i) => acc + +val.every((v2, i2) => questions[i].matches[i2] == v2), 0));
+      setScore(answers.reduce((acc, val, i) => acc + +val.every((v2, i2) => (questions[i].type === QuestionType.ORDER ? questions[i].options[i2] == v2 : questions[i].matches[i2] == v2)), 0));
     } else {
       setCurrentQuestion((prev) => prev+1)
     }
