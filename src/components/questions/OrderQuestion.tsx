@@ -1,21 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Box, Button, List, ListItem, ListItemText, Paper } from '@mui/material';
-import {
-  DndContext,
-  closestCenter,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  TouchSensor,
-} from '@dnd-kit/core';
-import {
-  SortableContext,
-  verticalListSortingStrategy,
-  arrayMove,
-  useSortable,
-} from '@dnd-kit/sortable';
+import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy, arrayMove, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import CheckIcon from '@mui/icons-material/Check';
 import { DBQuestion } from '../../lib/appwrite';
 import { DragIndicator, ExpandLess, ExpandMore } from '@mui/icons-material';
 
@@ -43,7 +30,7 @@ const SortableItem = ({ id, children }) => {
 };
 
 export default function OrderQuestion({question}: {question: DBQuestion}) {
-  const [options, setOptions] = useState(question.options.sort(() => Math.random() - 0.5));
+  const [options, setOptions] = React.useState(question.options.sort(() => Math.random() - 0.5));
 
   const handleDragEnd = (event: any) => {
     const { active, over } = event;

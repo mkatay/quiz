@@ -36,8 +36,10 @@ export default function SideMenu() {
         onChange={(e) => setSearch(e.target.value)}
         variant="filled"
         label="Keresés"
+        sx={{ borderRadius: 1, overflow: 'hidden' }}
         slotProps={{
           input: {
+            disableUnderline: true,
             endAdornment: <InputAdornment position="end"><Search /></InputAdornment>,
           },
         }}

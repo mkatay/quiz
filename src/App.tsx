@@ -7,7 +7,9 @@ import { Query } from 'appwrite';
 import { Loop } from '@mui/icons-material';
 import OrderQuestion from './components/questions/OrderQuestion';
 import { pad } from './lib/utils';
-import { MultipleChoiceQuestion } from './components/questions/MultipleChoiseQuestion';
+import MultipleChoiceQuestion from './components/questions/MultipleChoiseQuestion';
+import MatchingQuestion from './components/questions/MatchingQuestion';
+import SingleChoiceQuestion from './components/questions/SingleChoiseQuestion';
 
 export default function App() {
   const {queryParams, updateQueryParams} = useQueryParams();
@@ -25,7 +27,7 @@ export default function App() {
     if (!queryParams.q || !questions) return;
     const index = questions?.findIndex((doc) => doc.$id === queryParams.q);
     if (index !== currentQuestion) setCurrentQuestion(index);
-  }, [queryParams.q, questions]);
+  }, [queryParams, questions]);
 
   React.useEffect(() => {
     if (!queryParams.t) return;
@@ -72,6 +74,8 @@ export default function App() {
           <Box sx={{userSelect: 'none', width: '100%'}}>
             {questions[currentQuestion].type === QuestionType.ORDER && (<OrderQuestion question={questions[currentQuestion]} />)}
             {questions[currentQuestion].type === QuestionType.MULTIPLE_CHOICE && (<MultipleChoiceQuestion question={questions[currentQuestion]} />)}
+            {questions[currentQuestion].type === QuestionType.MATCH && (<MatchingQuestion question={questions[currentQuestion]} />)}
+            {questions[currentQuestion].type === QuestionType.SINGLE_CHOICE && (<SingleChoiceQuestion question={questions[currentQuestion]} />)}
           </Box>
           <Button sx={{alignSelf: 'flex-end'}} variant='contained'
           onClick={() => setCurrentQuestion((prev) => prev+1)}>
