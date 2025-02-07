@@ -1,44 +1,27 @@
 import React from 'react';
-import { Box, Button, List, ListItem, ListItemText, Paper } from '@mui/material';
+import { Box, Button, List } from '@mui/material';
 import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { SortableContext, verticalListSortingStrategy, arrayMove, useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
+import { SortableContext, verticalListSortingStrategy, arrayMove } from '@dnd-kit/sortable';
 import { DBQuestion } from '../../lib/appwrite';
 import { DragIndicator, ExpandLess, ExpandMore } from '@mui/icons-material';
+import SortableItem from '../SortableItem';
 
 
-const SortableItem = ({ id, children }) => {
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
-  const style = {
-    transform:CSS.Transform.toString(transform),
-    transition,
-    marginBottom: '8px',
-  };
+export default function OrderQuestion(
+  {question, state, setState}: {question: DBQuestion, state: string[], setState: React.Dispatch<React.SetStateAction<string[]>>}
+) {
 
-  return (
-    <ListItem
-      ref={setNodeRef}
-      style={style}
-      {...attributes}
-      {...listeners}
-      component={Paper}
-      sx={{ padding: 1 }}
-    >
-      <ListItemText primary={children} />
-    </ListItem>
-  );
-};
-
-export default function OrderQuestion({question}: {question: DBQuestion}) {
-  const [options, setOptions] = React.useState(question.options.sort(() => Math.random() - 0.5));
+  React.useEffect(() => {
+    if (!state?.length) setState(question.options.sort(() => Math.random() - 0.5));
+  }, []);
 
   const handleDragEnd = (event: any) => {
     const { active, over } = event;
     if (!active.id || !over.id) return;
     if (active.id !== over.id) {
-      const oldIndex = options.indexOf(active.id);
-      const newIndex = options.indexOf(over.id);
-      setOptions(arrayMove(options, oldIndex, newIndex));
+      const oldIndex = state.indexOf(active.id);
+      const newIndex = state.indexOf(over.id);
+      setState(arrayMove(state, oldIndex, newIndex));
     }
   };
   
@@ -52,11 +35,11 @@ export default function OrderQuestion({question}: {question: DBQuestion}) {
         onDragEnd={handleDragEnd}
       >
         <SortableContext
-          items={options}
+          items={state || []}
           strategy={verticalListSortingStrategy}
         >
           <List>
-            {options.map((option, index, array) => (
+            {state?.map((option, index, array) => (
               <SortableItem key={option} id={option} >
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <DragIndicator sx={{':hover': {cursor: 'grab'}, ':active': {cursor:'grabbing'}}} />

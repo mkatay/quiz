@@ -2,14 +2,18 @@ import React from "react";
 import { Box, FormControlLabel, Paper, Radio, RadioGroup } from "@mui/material";
 import { DBQuestion } from "../../lib/appwrite";
 
-export default function SingleChoiceQuestion({ question }: {question: DBQuestion}) {
-  
-  const [selection, setSelection] = React.useState<string>("");
+export default function SingleChoiceQuestion(
+  {question, state, setState}: {question: DBQuestion, state: string[], setState: React.Dispatch<React.SetStateAction<string[]>>}
+) {
+
+  React.useEffect(() => {
+    if (!state?.length) setState(question.options.map(() => 'n'));
+  }, []);
 
   return (
       <RadioGroup
-        value={selection}
-        onChange={(e) => setSelection(e.target.value)}
+        value={state?.findIndex((v) => v === 'y')}
+        onChange={(e) => setState((s) => s.map((_, i) => i === parseInt(e.target.value) ? 'y' : 'n'))}
         sx={{ gap: 1, flexDirection: 'row' }}
       >
         {question.options.map((option, index) => (

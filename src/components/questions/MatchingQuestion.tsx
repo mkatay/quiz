@@ -1,44 +1,26 @@
 import React from 'react';
-import { Box, Button, List, ListItem, ListItemText, Paper, Typography } from '@mui/material';
+import { Box, Button, List, Typography } from '@mui/material';
 import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { SortableContext, verticalListSortingStrategy, arrayMove, useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
+import { SortableContext, verticalListSortingStrategy, arrayMove } from '@dnd-kit/sortable';
 import { DBQuestion } from '../../lib/appwrite';
 import { DragIndicator, ExpandLess, ExpandMore } from '@mui/icons-material';
+import SortableItem from '../SortableItem';
 
-
-const SortableItem = ({ id, children }) => {
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
-  const style = {
-    transform:CSS.Transform.toString(transform),
-    transition,
-    marginBottom: '8px',
-  };
-
-  return (
-    <ListItem
-      ref={setNodeRef}
-      style={style}
-      {...attributes}
-      {...listeners}
-      component={Paper}
-      sx={{ padding: 1 }}
-    >
-      <ListItemText primary={children} />
-    </ListItem>
-  );
-};
-
-export default function MatchingQuestion({question}: {question: DBQuestion}) {
-  const [match, setMatch] = React.useState(question.matches.sort(() => Math.random() - 0.5));
+export default function MatchingQuestion(
+  {question, state, setState}: {question: DBQuestion, state: string[], setState: React.Dispatch<React.SetStateAction<string[]>>}
+) {
+  
+  React.useEffect(() => {
+    if (!state?.length) setState(question.matches.sort(() => Math.random() - 0.5));
+  }, []);
 
   const handleDragEnd = (event: any) => {
     const { active, over } = event;
     if (!active.id || !over.id) return;
     if (active.id !== over.id) {
-      const oldIndex = match.indexOf(active.id);
-      const newIndex = match.indexOf(over.id);
-      setMatch(arrayMove(match, oldIndex, newIndex));
+      const oldIndex = state.indexOf(active.id);
+      const newIndex = state.indexOf(over.id);
+      setState(arrayMove(state, oldIndex, newIndex));
     }
   };
   
@@ -52,11 +34,11 @@ export default function MatchingQuestion({question}: {question: DBQuestion}) {
         onDragEnd={handleDragEnd}
       >
         <SortableContext
-          items={match}
+          items={state || []}
           strategy={verticalListSortingStrategy}
         >
           <List sx={{ width: '100%' }}>
-            {match.map((option, index, array) => (
+            {state?.map((option, index, array) => (
               <Box key={option}>
                 <Typography variant='h6' sx={{ padding: 1 }}>
                   {question.options[index]}

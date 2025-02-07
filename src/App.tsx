@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Button, Container, Pagination, Typography } from '@mui/material';
+import { Box, Button, Container, Pagination, Paper, Typography } from '@mui/material';
 import SideMenu from './components/SideMenu';
 import { useQueryParams } from './hooks/QueryParamsContext';
 import { databases, DB, DBQuestion, QuestionType } from './lib/appwrite';
@@ -16,6 +16,7 @@ export default function App() {
 
   const [questions, setQuestions] = React.useState<DBQuestion[]>();
   const [currentQuestion, setCurrentQuestion] = React.useState<number>(0);
+  const [answers, setAnswers] = React.useState<string[][]>([]);
 
   React.useEffect(() => {
     if (!questions) return;
@@ -43,11 +44,25 @@ export default function App() {
       } else {
         documents = documents.sort(() => Math.random() - 0.5);
       }
+      setAnswers(documents.map(() => []));
       setQuestions(documents);
       setCurrentQuestion(0);
+      setScore(undefined);
     })
     .catch((e) => console.error(e));
   }, [queryParams.t]);
+
+  const handleQuestionChange: React.Dispatch<React.SetStateAction<any[]>> =
+    (v) => setAnswers((a) => answers.map((o, i) => i === currentQuestion ? (typeof v === 'function' ? v(a[currentQuestion]) : v) : o));
+
+  const [score, setScore] = React.useState<number>();
+  function handleNext() {
+    if (questions && currentQuestion === questions.length - 1) {
+      setScore(answers.reduce((acc, val, i) => acc + +val.every((v2, i2) => questions[i].matches[i2] == v2), 0));
+    } else {
+      setCurrentQuestion((prev) => prev+1)
+    }
+  }
 
   return (
     <Container sx={{
@@ -73,15 +88,33 @@ export default function App() {
             {questions[currentQuestion].question}
           </Typography>
           <Box sx={{userSelect: 'none', width: '100%'}}>
-            {questions[currentQuestion].type === QuestionType.ORDER && (<OrderQuestion question={questions[currentQuestion]} />)}
-            {questions[currentQuestion].type === QuestionType.MULTIPLE_CHOICE && (<MultipleChoiceQuestion question={questions[currentQuestion]} />)}
-            {questions[currentQuestion].type === QuestionType.MATCH && (<MatchingQuestion question={questions[currentQuestion]} />)}
-            {questions[currentQuestion].type === QuestionType.SINGLE_CHOICE && (<SingleChoiceQuestion question={questions[currentQuestion]} />)}
+            {questions[currentQuestion].type === QuestionType.ORDER && (
+              <OrderQuestion question={questions[currentQuestion]} state={answers[currentQuestion]} setState={handleQuestionChange} />
+            )}
+            {questions[currentQuestion].type === QuestionType.MULTIPLE_CHOICE && (
+              <MultipleChoiceQuestion question={questions[currentQuestion]} state={answers[currentQuestion]} setState={handleQuestionChange} />
+            )}
+            {questions[currentQuestion].type === QuestionType.MATCH && (
+              <MatchingQuestion question={questions[currentQuestion]} state={answers[currentQuestion]} setState={handleQuestionChange} />
+            )}
+            {questions[currentQuestion].type === QuestionType.SINGLE_CHOICE && (
+              <SingleChoiceQuestion question={questions[currentQuestion]} state={answers[currentQuestion]} setState={handleQuestionChange} />
+            )}
           </Box>
-          <Button sx={{alignSelf: 'flex-end'}} variant='contained'
-          onClick={() => setCurrentQuestion((prev) => prev+1)}>
-            {currentQuestion === questions.length-1 ? "Befejezés" : "Következő"}
-          </Button>
+          {score ? (
+            <Paper sx={{padding: 2, backgroundColor: (t) => t.palette.info.dark}}>
+              <Typography variant='h6'>
+                Eredmény: {score} / {questions.length} ({Math.round(score/questions.length*100)}%)
+              </Typography>
+            </Paper>
+          ) : (
+            <Button sx={{alignSelf: 'flex-end'}} variant='contained'
+              onClick={handleNext}
+              color={currentQuestion === questions.length-1 ? "warning" : "primary"}
+            >
+              {currentQuestion === questions.length-1 ? "Befejezés" : "Következő"}
+            </Button>
+          )}
           <Pagination sx={{marginTop: 'auto'}}
           count={questions.length} page={currentQuestion+1} onChange={(_,v) => setCurrentQuestion(v-1)} />
         </Box>
