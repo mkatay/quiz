@@ -54,8 +54,9 @@ export default function App() {
       display: 'flex',
       flexDirection: 'row',
       minHeight: '100vh',
+      gap: 2,
       padding: 4,
-      gap: 2
+      paddingTop: {xs: 10, md: 4}
     }}>
       <SideMenu />
       {queryParams.t ? questions ? (

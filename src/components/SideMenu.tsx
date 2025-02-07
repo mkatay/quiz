@@ -1,9 +1,8 @@
 import React from "react";
-import { Box, Divider, InputAdornment, List, ListItemButton, ListItemIcon, ListItemText, ListSubheader, Paper, TextField } from "@mui/material";
-import { ChevronRight, Loop, Search } from "@mui/icons-material";
+import { AppBar, Box, Button, Divider, IconButton, InputAdornment, List, ListItemButton, ListItemIcon, ListItemText, ListSubheader, Paper, TextField, Toolbar, Typography } from "@mui/material";
+import { ChevronRight, Loop, Menu, Search } from "@mui/icons-material";
 import { useQueryParams } from "../hooks/QueryParamsContext";
 import { databases, DB, DBTest } from "../lib/appwrite";
-import { Query } from "appwrite";
 import { pad } from "../lib/utils";
 
 export default function SideMenu() {
@@ -18,19 +17,49 @@ export default function SideMenu() {
     .catch((e) => console.error(e));
   }, []);
 
-  return (
+  const [menuOpen, setMenuOpen] = React.useState(false);
+
+  return (<>
+    <AppBar position="fixed" sx={{
+      display: {xs: 'block', md: 'none'},
+      height: 64,
+    }}>
+      <Toolbar>
+        <IconButton
+          size="large"
+          edge="start"
+          color="inherit"
+          aria-label="menu"
+          sx={{ mr: 2 }}
+          onClick={() => setMenuOpen((o)=>!o)}
+        >
+          <Menu />
+        </IconButton>
+        <Typography variant="h6">
+          Interaktív tesztek
+        </Typography>
+      </Toolbar>
+    </AppBar>
     <Paper elevation={1} sx={{
       padding: 2,
       width: 300,
+      height: {xs:'80vh', md:'auto'},
       maxHeight: '95vh',
       flex: '0 0 auto',
-      position: 'sticky',
-      top: 32,
+      position: {xs: 'absolute', md: 'sticky'},
+      top: {xs: 64, md: 32},
+      zIndex: 99,
       display: 'flex',
+      transform: {xs: menuOpen ? 'translateX(0)' : 'translateX(-5vw)', md: 'none'},
+      opacity: {xs: menuOpen ? 1 : 0, md: 'inherit'},
+      transition: 'all 0.15s',
       flexDirection: 'column',
       gap: 2,
+
     }}>
-      <h2>Interaktív tesztek</h2>
+      <Typography variant="h5" sx={{display: {xs: 'none', md: 'block'}}}>
+        Interaktív tesztek
+      </Typography>
       <TextField
         value={search}
         onChange={(e) => setSearch(e.target.value)}
@@ -86,5 +115,5 @@ export default function SideMenu() {
           <p style={{color: 'gray'}}>Készítette: <a href="https://github.com/varma02">varma02@Github</a></p>
       </footer>
     </Paper>
-  );
+  </>);
 }
