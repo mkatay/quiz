@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Button, Container, Pagination, Paper, Typography } from '@mui/material';
 import SideMenu from './components/SideMenu';
 import { useQueryParams } from './hooks/QueryParamsContext';
-import { databases, DB, DBQuestion, QuestionType } from './lib/appwrite';
+import { databases, DB, DBQuestion, QuestionType, storage } from './lib/appwrite';
 import { Query } from 'appwrite';
 import { Loop } from '@mui/icons-material';
 import OrderQuestion from './components/questions/OrderQuestion';
@@ -10,6 +10,7 @@ import { pad } from './lib/utils';
 import MultipleChoiceQuestion from './components/questions/MultipleChoiseQuestion';
 import MatchingQuestion from './components/questions/MatchingQuestion';
 import SingleChoiceQuestion from './components/questions/SingleChoiseQuestion';
+import { AW_IMAGE_BUCKET } from './lib/config';
 
 export default function App() {
   const {queryParams, updateQueryParams} = useQueryParams();
@@ -52,6 +53,16 @@ export default function App() {
     .catch((e) => console.error(e));
   }, [queryParams.t]);
 
+  const [image, setImage] = React.useState<string>();
+  React.useEffect(() => {
+    const imageId = questions?.[currentQuestion]?.image;
+    if (!imageId) {
+      setImage(undefined);
+      return;
+    }
+    setImage(storage.getFileView(AW_IMAGE_BUCKET, imageId));
+  }, [currentQuestion, questions]);
+
   const handleQuestionChange: React.Dispatch<React.SetStateAction<any[]>> =
     (v) => setAnswers((a) => answers.map((o, i) => i === currentQuestion ? (typeof v === 'function' ? v(a[currentQuestion]) : v) : o));
 
@@ -87,6 +98,11 @@ export default function App() {
           <Typography variant='h5' sx={{width: '100%'}}>
             {questions[currentQuestion].question}
           </Typography>
+          {image && (
+            <Box sx={{width: '100%', maxHeight: '30vh', display: 'flex', justifyContent: 'center'}}>
+              <img src={image} alt="ez egy kép" />
+            </Box>
+          )}
           <Box sx={{userSelect: 'none', width: '100%'}}>
             {questions[currentQuestion].type === QuestionType.ORDER && (
               <OrderQuestion question={questions[currentQuestion]} state={answers[currentQuestion]} setState={handleQuestionChange} reveal={score !== undefined} />

@@ -1,10 +1,12 @@
-import { Client, Databases } from "appwrite";
+import { Client, Databases, Storage } from "appwrite";
 import { AW_DATABASE, AW_ENDPOINT, AW_PROJECT, AW_QUESTIONS_TABLE, AW_TESTS_TABLE } from "./config";
 
 export const client = new Client();
 
 client.setProject(AW_PROJECT);
 client.setEndpoint(AW_ENDPOINT);
+
+export const storage = new Storage(client);
 
 export const databases =  new Databases(client);
 export enum DB {
@@ -42,4 +44,5 @@ export interface DBQuestion extends DefaultDocumentParams {
   options: string[];
   matches: string[];
   test: DBTest;
+  image: string;
 };
