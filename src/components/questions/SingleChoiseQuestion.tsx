@@ -8,7 +8,7 @@ export default function SingleChoiceQuestion(
 
   React.useEffect(() => {
     if (!state?.length) setState(question.options.map(() => 'n'));
-  }, []);
+  }, [question]);
 
   return (
       <RadioGroup

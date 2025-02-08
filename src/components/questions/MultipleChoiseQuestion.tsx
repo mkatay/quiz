@@ -8,7 +8,7 @@ export default function MultipleChoiceQuestion(
 
   React.useEffect(() => {
     if (!state?.length) setState(question.options.map(() => 'n'));
-  }, []);
+  }, [question]);
 
   return (
     <FormGroup sx={{ gap: 1, flexDirection: 'row' }}>

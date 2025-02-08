@@ -12,7 +12,7 @@ export default function MatchingQuestion(
   
   React.useEffect(() => {
     if (!state?.length) setState([...question.matches].sort(() => Math.random() - 0.5));
-  }, []);
+  }, [question]);
 
   const handleDragEnd = (event: any) => {
     const { active, over } = event;
