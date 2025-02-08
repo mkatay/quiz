@@ -49,10 +49,7 @@ export default function SideMenu() {
       position: {xs: 'absolute', md: 'sticky'},
       top: {xs: 64, md: 32},
       zIndex: 99,
-      display: 'flex',
-      transform: {xs: menuOpen ? 'translateX(0)' : 'translateX(-5vw)', md: 'none'},
-      opacity: {xs: menuOpen ? 1 : 0, md: 'inherit'},
-      transition: 'all 0.15s',
+      display: {xs: menuOpen ? 'flex' : 'none', md: 'flex'},
       flexDirection: 'column',
       gap: 2,
 

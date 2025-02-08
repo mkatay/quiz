@@ -70,7 +70,7 @@ export default function App() {
       flexDirection: 'row',
       minHeight: '100vh',
       gap: 2,
-      padding: 4,
+      padding: {xs: 1, md: 4},
       paddingTop: {xs: 10, md: 4}
     }}>
       <SideMenu />
@@ -84,7 +84,7 @@ export default function App() {
               {currentQuestion+1} / {questions.length}
             </Typography>
           </Box>
-          <Typography variant='h5'>
+          <Typography variant='h5' sx={{width: '100%'}}>
             {questions[currentQuestion].question}
           </Typography>
           <Box sx={{userSelect: 'none', width: '100%'}}>
