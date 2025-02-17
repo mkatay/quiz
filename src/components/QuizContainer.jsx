@@ -17,9 +17,13 @@ export const QuizContainer = ({selectedQuiz}) => {
   const [questions,setQuestions]=useState(null)
   const [questionIndex,setQuestionIndex]=useState(0)
   const [hit,setHit]=useState(0)
+  const [showResult,setShowResult]=useState(false)
 
   useEffect(()=>{
     readQuizContent(selectedQuiz,setQuestions)
+    setShowResult(false)
+    setHit(0)
+    setQuestionIndex(0)
   },[selectedQuiz])
 
 //questions && console.log(questions[questionIndex]);
@@ -52,13 +56,17 @@ console.log('jó válaszok száma:',hit);
         </Button>
       </Box>  
     </Box>
-    {questionIndex==19 && 
-    <Box sx={{width:'80%',boxShadow:'0 0 5px #3f50b5',backgroundColor:'inherit',margin:'auto',borderRadius:'10px'}}>
-      <Typography variant="h6" gutterBottom sx={{textAlign:'center'}}>
-       Végeredmény: <span style={{color:"green",fontSize:'2rem'}}>{hit}</span><span>/20 pont.</span>
-       <span> &nbsp; Százalékos teljesítés: <b className="blinking-text" >{(hit*100/20).toFixed(1)}%</b></span>
-      </Typography>
-    </Box>}
+    {questionIndex==19 && <Button variant="contained" color="primary" sx={{display:'flex',margin:'auto'}} onClick={()=>setShowResult(true)}>Végeredmény</Button>}
+    {showResult && <Box sx={{width:'80%',boxShadow:'0 0 5px #3f50b5',backgroundColor:'inherit',margin:'auto',borderRadius:'10px'}}>
+          <Typography variant="h6" gutterBottom sx={{textAlign:'center'}}>
+          Végeredmény: <span style={{color:"green",fontSize:'2rem'}}>{hit}</span><span>/20 pont.</span>
+          <span> &nbsp; Százalékos teljesítés: <b className="blinking-text" >{(hit*100/20).toFixed(1)}%</b></span>
+          </Typography>
+        </Box>
+}
+      
+ 
+   
     </>
   )
 }

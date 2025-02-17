@@ -27,8 +27,9 @@ export const readQuizContent = async (selectedQuiz,setQuiz) => {
       id: doc.id,
     }));
      // Véletlenszerű sorrendezés (shuffle)
-     const shuffledQuizContent = quizContent.sort(() => Math.random() - 0.5);
+    const shuffledQuizContent = quizContent.sort(() => Math.random() - 0.5);
     setQuiz(shuffledQuizContent);
+    //setQuiz(quizContent)
   } catch (error) {
     console.error("Error fetching quiz list: ", error);
   }
@@ -55,3 +56,29 @@ export const addMultipleDocuments=async (dataArray) =>{
   addMultipleDocuments(questions)
 },[])
 */
+
+
+
+export const generateSchema = async (collectionName) => {
+  const collectionRef = collection(db, collectionName);
+  const snapshot = await getDocs(collectionRef);
+
+  const schema = {};
+
+  snapshot.docs.forEach((doc) => {
+    const data = doc.data();
+    Object.keys(data).forEach((key) => {
+      const value = data[key];
+      const type = Array.isArray(value)
+        ? "array"
+        : value === null
+        ? "null"
+        : typeof value;
+      schema[key] = type; // Egyedi mezőnév és típus tárolása
+    });
+  });
+
+  console.log("Schema:", schema);
+};
+
+

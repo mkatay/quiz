@@ -26,16 +26,19 @@ const SortableItem = ({ id, children }) => {
     transform:CSS.Transform.toString(transform),
     transition,
     marginBottom: '8px',
+    touchAction: 'manipulation', 
   };
 
   return (
     <ListItem
       ref={setNodeRef}
-      style={style}
       {...attributes}
       {...listeners}
       component={Paper}
-      sx={{ padding: 1 }}
+      sx={{ padding: 1,transform:CSS.Transform.toString(transform),
+        transition,
+        marginBottom: '8px',
+        touchAction: 'manipulation',  }}
     >
       <ListItemText primary={children} />
     </ListItem>
@@ -90,7 +93,7 @@ console.log(options,questionData.answer);
         <SortableContext items={options} strategy={verticalListSortingStrategy}>
           <List>
             {options.map((option) => (
-              <SortableItem key={option} id={option}>
+              <SortableItem key={option} id={option} >
                 {option}
               </SortableItem>
             ))}

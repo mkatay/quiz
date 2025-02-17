@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {  Container,  Typography,  Paper,  Select,  MenuItem,  Button,  Grid2,} from "@mui/material";
 import { matching } from "../utils";
 import CheckIcon from '@mui/icons-material/Check';
+import { useEffect } from "react";
 
 export const MatchingQuestion = ({ questionData ,questionIndex,setHit}) => {
   const [answers, setAnswers] = useState(
@@ -9,6 +10,12 @@ export const MatchingQuestion = ({ questionData ,questionIndex,setHit}) => {
   );
   const [correct,setCorrect]=useState(false)
  const [isSubmitted, setIsSubmitted] = useState(false);
+
+ useEffect(()=>{
+  setCorrect(false)
+  setIsSubmitted(false)
+  setAnswers(Array(questionData.options.length).fill(""))
+ },[questionData])
 
   const handleSelectChange = (index, value) => {
     const newAnswers = [...answers];

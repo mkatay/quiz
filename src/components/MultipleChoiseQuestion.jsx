@@ -2,11 +2,18 @@ import React, { useState } from "react";
 import { Box, Typography, FormGroup, FormControlLabel, Checkbox, Button } from "@mui/material";
 import { multiple_choice } from "../utils";
 import CheckIcon from '@mui/icons-material/Check';
+import { useEffect } from "react";
 
 export const MultipleChoiceQuestion = ({ questionData,questionIndex,setHit }) => {
   const [selectedAnswers, setSelectedAnswers] = useState([]);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [correct,setCorrect]=useState(false)
+
+  useEffect(()=>{
+    setSelectedAnswers([])
+    setIsSubmitted(false)
+    setCorrect(false)
+  },[questionData])
 
   const handleCheckboxChange = (optionIndex) => {
     setSelectedAnswers((prevSelected) =>

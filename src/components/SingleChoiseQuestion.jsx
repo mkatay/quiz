@@ -22,6 +22,7 @@ export const SingleChoiceQuestion = ({ questionData,questionIndex,setHit}) => {
     // Kérdés váltásakor alaphelyzetbe állítjuk az állapotot
     setSelectedAnswer("");
     setIsSubmitted(false); 
+    setCorrect(false)
   }, [questionData]);
 
   console.log('single_choice komponensben');

@@ -1,13 +1,17 @@
 import './App.css'
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
 import { SelectQuiz } from './components/SelectQuiz';
-import { Box } from '@mui/material';
+import { useEffect } from 'react';
+import { generateSchema } from './utility/crudUtility';
+
 
 const queryClient = new QueryClient();
 
 
 function App() {
-
+/*useEffect(()=>{
+  generateSchema('quiz-content')
+},[])*/
 
   return (
     <QueryClientProvider client={queryClient}>
